@@ -880,6 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // HTML escape utility function
   function escapeHtml(text) {
+    if (text == null) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
@@ -917,10 +918,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Open share URL
     if (shareUrl) {
       if (button.classList.contains("email-btn")) {
-        // Validate email URL before opening
-        if (shareUrl.startsWith("mailto:")) {
-          window.location.href = shareUrl;
-        }
+        // Email opens in the same window
+        window.location.href = shareUrl;
       } else {
         // Social media opens in a new window
         window.open(shareUrl, "_blank", "width=600,height=400");
