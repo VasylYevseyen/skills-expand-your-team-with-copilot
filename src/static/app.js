@@ -555,16 +555,16 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="social-sharing">
         <div class="social-sharing-label">Share this activity:</div>
         <div class="social-buttons">
-          <button class="social-btn facebook-btn" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on Facebook">
+          <button class="social-btn facebook-btn" data-activity="${escapeHtml(name)}" data-description="${escapeHtml(details.description)}" title="Share on Facebook">
             <span class="social-icon">f</span>
           </button>
-          <button class="social-btn twitter-btn" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on Twitter">
+          <button class="social-btn twitter-btn" data-activity="${escapeHtml(name)}" data-description="${escapeHtml(details.description)}" title="Share on Twitter">
             <span class="social-icon">𝕏</span>
           </button>
-          <button class="social-btn linkedin-btn" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on LinkedIn">
+          <button class="social-btn linkedin-btn" data-activity="${escapeHtml(name)}" data-description="${escapeHtml(details.description)}" title="Share on LinkedIn">
             <span class="social-icon">in</span>
           </button>
-          <button class="social-btn email-btn" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share via Email">
+          <button class="social-btn email-btn" data-activity="${escapeHtml(name)}" data-description="${escapeHtml(details.description)}" title="Share via Email">
             <span class="social-icon">✉</span>
           </button>
         </div>
@@ -878,6 +878,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // HTML escape utility function
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Handle social sharing
   function handleSocialShare(event) {
     const button = event.currentTarget;
@@ -891,7 +898,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const shareText = `Check out this activity at Mergington High School: ${activityName} - ${description}`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(pageUrl);
-    const encodedActivityName = encodeURIComponent(activityName);
     
     let shareUrl = "";
     
@@ -911,8 +917,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Open share URL
     if (shareUrl) {
       if (button.classList.contains("email-btn")) {
-        // Email opens in the same window
-        window.location.href = shareUrl;
+        // Validate email URL before opening
+        if (shareUrl.startsWith("mailto:")) {
+          window.location.href = shareUrl;
+        }
       } else {
         // Social media opens in a new window
         window.open(shareUrl, "_blank", "width=600,height=400");
